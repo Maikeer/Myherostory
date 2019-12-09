@@ -1,5 +1,11 @@
 package org.tinygame.herostory;
 
+import io.netty.channel.Channel;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.util.concurrent.GlobalEventExecutor;
+import org.tinygame.herostory.msg.GameMsgProtocol;
+
 /**
  * @Author: jin.tang
  * <p>
@@ -12,11 +18,37 @@ package org.tinygame.herostory;
  * Ctrl+Alt+L	代码格式化
  * Alt+J	提示所有智能补全代码
  */
-public class BoradCaster {
+public final class BoradCaster {
+    private static final ChannelGroup _channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     /**
      * 私有化构造方法
      */
     private BoradCaster (){
 
+    }
+
+    /**
+     * 添加信道
+     * @param channel
+     */
+    static public void addChannel(Channel channel){
+        _channelGroup.add(channel);
+    }
+    /**
+     * delete信道
+     * @param channel
+     */
+    static public void deleteChannel(Channel channel){
+        _channelGroup.remove(channel);
+    }
+    /**
+     * 广播信道
+     * @param msg
+     */
+    static public void boroadCast(Object msg){
+        if(null ==msg){
+            return;
+        }
+        _channelGroup.writeAndFlush(msg);
     }
 }

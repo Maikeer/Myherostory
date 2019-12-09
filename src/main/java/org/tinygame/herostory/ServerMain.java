@@ -12,6 +12,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
+import org.tinygame.herostory.cmdhandle.CmdHanderFactory;
 
 
 /**
@@ -29,6 +30,8 @@ public class ServerMain {
      * @param argArray 参数数组
      */
     static public void main(String[] argArray) {
+        CmdHanderFactory.init();//初始化hander
+        GameMsgRecognizer.init();//初始化识别器
         EventLoopGroup bossGroup = new NioEventLoopGroup();     // 这个是故事中的美女
         EventLoopGroup workerGroup = new NioEventLoopGroup();   // 这个是故事中的服务生
 

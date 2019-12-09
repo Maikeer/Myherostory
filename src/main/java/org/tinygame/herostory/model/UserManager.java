@@ -1,5 +1,10 @@
 package org.tinygame.herostory.model;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Author: jin.tang
  * <p>
@@ -16,7 +21,32 @@ package org.tinygame.herostory.model;
  * Ctrl+H：显示当前类的继承层次
  * Fn+Alt+Insert：产生构造方法
  */
-public class UserManager {
-    public UserManager() {
+public final class UserManager {
+    private static final Map<Integer, User> _userMap = new HashMap<Integer, User>();
+    private UserManager() {
+    }
+
+    /**
+     * 添加用户
+     * @param user
+     */
+    static public void addUser(User user){
+        if(null==user)return;
+        _userMap.put(user.userId,user);
+    }
+    /**
+     * 删除用户
+     * @param userId
+     */
+    static public void removeUser(Integer userId){
+        if(null==userId)return;
+        _userMap.remove(userId);
+    }
+    /**
+     * 获取用户列表
+     * @param
+     */
+    static public Collection<User> getUsers(){
+       return  _userMap.values();
     }
 }
