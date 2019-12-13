@@ -42,6 +42,7 @@ public class UserEntryCmdHander implements ICmdHander<GameMsgProtocol.UserEntryC
         UserManager.addUser( user);
         //存储用户id绑定到channel
         ctx.channel().attr(AttributeKey.valueOf("userId")).set(userId);
+        ctx.channel().attr(AttributeKey.valueOf("subhp")).set(100);
         //构建结构并发送
         GameMsgProtocol.UserEntryResult build = resultBuilder.build();
         BoradCaster.boroadCast(build);
