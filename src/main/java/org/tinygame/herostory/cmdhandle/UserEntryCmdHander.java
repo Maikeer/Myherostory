@@ -30,19 +30,14 @@ public class UserEntryCmdHander implements ICmdHander<GameMsgProtocol.UserEntryC
     @Override
     public  void hander(ChannelHandlerContext ctx, GameMsgProtocol.UserEntryCmd msg) {
         GameMsgProtocol.UserEntryCmd userEntryCmd = msg;
-        int userId = userEntryCmd.getUserId();
-        String heroAvatar = userEntryCmd.getHeroAvatar();
+        Integer useId = (Integer) ctx.channel().attr(AttributeKey.valueOf("userId")).get();
+        User user= UserManager.getUserById(useId);
+        int userId = user.userId;
+        String heroAvatar = user.heroAvatar;
         GameMsgProtocol.UserEntryResult.Builder resultBuilder = GameMsgProtocol.UserEntryResult.newBuilder();
         resultBuilder.setUserId(userId);
         resultBuilder.setHeroAvatar(heroAvatar);
 
-        User user = new User();
-        user.userId = userId;
-        user.heroAvatar = heroAvatar;
-        UserManager.addUser( user);
-        //存储用户id绑定到channel
-        ctx.channel().attr(AttributeKey.valueOf("userId")).set(userId);
-        ctx.channel().attr(AttributeKey.valueOf("subhp")).set(100);
         //构建结构并发送
         GameMsgProtocol.UserEntryResult build = resultBuilder.build();
         BoradCaster.boroadCast(build);

@@ -32,12 +32,29 @@ public class UserAttkCmdHander implements ICmdHander<GameMsgProtocol.UserAttkCmd
     @Override
     public void hander(ChannelHandlerContext ctx, GameMsgProtocol.UserAttkCmd msg) {
         Integer subhp = (Integer) ctx.channel().attr(AttributeKey.valueOf("subhp")).get();
+        Integer userId = (Integer) ctx.channel().attr(AttributeKey.valueOf("userId")).get();
         int targetUserId = msg.getTargetUserId();
-        GameMsgProtocol.UserSubtractHpResult.Builder builder=GameMsgProtocol.UserSubtractHpResult.newBuilder();
 
+        GameMsgProtocol.UserAttkResult.Builder attkBuild=GameMsgProtocol.UserAttkResult.newBuilder();
+        attkBuild.setAttkUserId(userId);
+        attkBuild.setTargetUserId(targetUserId);
+        BoradCaster.boroadCast(attkBuild.build());
+        subhp=subhp-10;
+        GameMsgProtocol.UserSubtractHpResult.Builder builder=GameMsgProtocol.UserSubtractHpResult.newBuilder();
         builder.setTargetUserId(targetUserId);
         builder.setSubtractHp(10);
-        GameMsgProtocol.UserSubtractHpResult build = builder.build();
-        BoradCaster.boroadCast(build);
+        GameMsgProtocol.UserSubtractHpResult subBuild = builder.build();
+        BoradCaster.boroadCast(subBuild);
+        if(subhp>0){
+            ctx.channel().attr(AttributeKey.valueOf("subhp")).set(subhp);
+
+        }else{
+
+            GameMsgProtocol.UserDieResult.Builder dieBuilder=GameMsgProtocol.UserDieResult.newBuilder();
+            dieBuilder.setTargetUserId(targetUserId);
+            GameMsgProtocol.UserDieResult build = dieBuilder.build();
+            BoradCaster.boroadCast(build);
+        }
+
     }
 }

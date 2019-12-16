@@ -3,6 +3,8 @@ package org.tinygame.herostory.cmdhandle;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.AttributeKey;
 import org.tinygame.herostory.BoradCaster;
+import org.tinygame.herostory.model.User;
+import org.tinygame.herostory.model.UserManager;
 import org.tinygame.herostory.msg.GameMsgProtocol;
 
 /**
@@ -29,10 +31,21 @@ public class UserMoveToCmdHander implements ICmdHander<GameMsgProtocol.UserMoveT
             return;
         }
         GameMsgProtocol.UserMoveToCmd cmd = msg;
+        User user = UserManager.getUserById(userId);
+        long currentTimeMillis = System.currentTimeMillis();
+        user.info.fromX=cmd.getMoveFromPosX();
+        user.info.fromY=cmd.getMoveFromPosY();
+        user.info.toX=cmd.getMoveToPosX();
+        user.info.toY=cmd.getMoveToPosY();
+        user.info.startTime=currentTimeMillis;
+        UserManager.addUser(user);
         GameMsgProtocol.UserMoveToResult.Builder moveBuilder = GameMsgProtocol.UserMoveToResult.newBuilder();
         moveBuilder.setMoveUserId(userId);
+        moveBuilder.setMoveFromPosX(cmd.getMoveFromPosX());
+        moveBuilder.setMoveFromPosY(cmd.getMoveFromPosY());
         moveBuilder.setMoveToPosX(cmd.getMoveToPosX());
         moveBuilder.setMoveToPosY(cmd.getMoveToPosY());
+        moveBuilder.setMoveStartTime(currentTimeMillis);
         GameMsgProtocol.UserMoveToResult build = moveBuilder.build();
         BoradCaster.boroadCast(build);
     }

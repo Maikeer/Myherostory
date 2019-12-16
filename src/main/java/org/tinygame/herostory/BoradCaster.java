@@ -4,7 +4,11 @@ import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import org.tinygame.herostory.model.User;
+import org.tinygame.herostory.model.UserManager;
 import org.tinygame.herostory.msg.GameMsgProtocol;
+
+import java.util.Collection;
 
 /**
  * @Author: jin.tang
@@ -49,6 +53,8 @@ public final class BoradCaster {
         if(null ==msg){
             return;
         }
+        Collection<User> users = UserManager.getUsers();
+
         _channelGroup.writeAndFlush(msg);
     }
 }

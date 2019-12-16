@@ -23,6 +23,7 @@ public final class SingelThreadMsgService {
             return;
         }
         _singleService.submit(()->{
+            System.err.println("当前线程："+Thread.currentThread().getName());
             ICmdHander<? extends GeneratedMessageV3 > cmdHander=null;
             cmdHander= CmdHanderFactory.createHander(msg.getClass());
 
