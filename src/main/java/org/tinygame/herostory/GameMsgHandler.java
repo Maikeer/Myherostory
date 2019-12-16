@@ -3,17 +3,9 @@ package org.tinygame.herostory;
 import com.google.protobuf.GeneratedMessageV3;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.group.ChannelGroup;
-import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.AttributeKey;
-import io.netty.util.concurrent.GlobalEventExecutor;
-import org.tinygame.herostory.cmdhandle.*;
-import org.tinygame.herostory.model.User;
 import org.tinygame.herostory.model.UserManager;
 import org.tinygame.herostory.msg.GameMsgProtocol;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 游戏消息处理器
@@ -44,12 +36,11 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("收到客户端消息, msgclass=" + msg.getClass().getName() + " msg = " + msg);
-        ICmdHander<? extends GeneratedMessageV3 > cmdHander=null;
-        cmdHander= CmdHanderFactory.createHander(msg.getClass());
+        if(msg instanceof  GeneratedMessageV3){
 
-        if(null != cmdHander){
-            cmdHander.hander(ctx,cast(msg));
+            SingelThreadMsgService.handerMsg(ctx, (GeneratedMessageV3) msg);
         }
+
     }
 
     /**
